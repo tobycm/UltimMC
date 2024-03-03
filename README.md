@@ -16,6 +16,10 @@
 
 To update the launcher replace all replaceable files and folders with the newer ones from any of the links listed above.
 
+There's additionally a [.deb package](https://nightly.link/UltimMC/ultimmc-deb/workflows/ci/master/UltimMC.zip) for Debian/Ubuntu distributions.
+
+And an AUR package as [ultimmc-bin](https://aur.archlinux.org/packages/ultimmc-bin).
+
 ## How to install and use
 
 1. Download pre-built binaries for your system.
