@@ -6,6 +6,8 @@ on:
   pull_request:
     branches: [ develop ]
   workflow_dispatch:
+  schedule:
+    - cron: "0 0 1 * *"
 
 jobs:
   build-linux:
@@ -114,7 +116,7 @@ jobs:
 
       - name: Setup CMake
         run: |
-          curl -L $(curl -s https://api.github.com/repos/kitware/cmake/releases/latest | python -c "import sys, json; print(json.load(sys.stdin)['assets'][14]['browser_download_url'])") -o cmake.zip
+          curl -L https://github.com/Kitware/CMake/releases/download/v3.29.0-rc2/cmake-3.29.0-rc2-windows-i386.zip -o cmake.zip
           unzip cmake.zip
 
       - name: Setup JDK
