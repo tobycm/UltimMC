@@ -161,7 +161,7 @@ public:
 
     /// returns a valid launcher (task container)
     virtual shared_qobject_ptr<LaunchTask> createLaunchTask(
-            AuthSessionPtr account, QuickPlayTargetPtr quickPlayTarget) = 0;
+            AuthSessionPtr account, QuickPlayTargetPtr quickPlayTarget, quint16 localAuthServerPort) = 0;
 
     /// returns the current launch task (if any)
     shared_qobject_ptr<LaunchTask> getLaunchTask();

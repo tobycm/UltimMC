@@ -1,4 +1,5 @@
 #include "AccountData.h"
+#include "AuthProviders.h"
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -312,11 +313,10 @@ bool AccountData::resumeStateFromV3(QJsonObject data) {
     auto typeS = typeV.toString();
     if(typeS == "MSA") {
         type = AccountType::MSA;
-    } else if (typeS == "Mojang") {
-        type = AccountType::Mojang;
+        provider = AuthProviders::lookup("MSA");
     } else {
-        qWarning() << "Failed to parse account data: type is not recognized.";
-        return false;
+        type = AccountType::Mojang;
+        provider = AuthProviders::lookup(typeS);
     }
 
     if(type == AccountType::Mojang) {
@@ -349,7 +349,7 @@ bool AccountData::resumeStateFromV3(QJsonObject data) {
 QJsonObject AccountData::saveState() const {
     QJsonObject output;
     if(type == AccountType::Mojang) {
-        output["type"] = "Mojang";
+        output["type"] = provider->id();
         if(legacy) {
             output["legacy"] = true;
         }
@@ -419,7 +419,8 @@ QString AccountData::profileId() const {
 
 QString AccountData::profileName() const {
     if(minecraftProfile.name.size() == 0) {
-        return QObject::tr("No profile (%1)").arg(accountDisplayString());
+        // Fix for too long of a name
+        return QObject::tr("%1").arg(accountDisplayString());
     }
     else {
         return minecraftProfile.name;

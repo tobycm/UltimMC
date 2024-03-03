@@ -33,6 +33,7 @@ class BaseDetachedToolFactory;
 class TranslationsModel;
 class ITheme;
 class MCEditTool;
+class AuthServer;
 class GAnalytics;
 
 namespace Meta {
@@ -198,6 +199,7 @@ private:
     std::shared_ptr<GenericPageProvider> m_globalSettingsProvider;
     std::map<QString, std::unique_ptr<ITheme>> m_themes;
     std::unique_ptr<MCEditTool> m_mcedit;
+    std::shared_ptr<AuthServer> m_authserver;
     QString m_jarsPath;
     QSet<QString> m_features;
 

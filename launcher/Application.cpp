@@ -49,6 +49,7 @@
 
 #include "InstanceList.h"
 
+#include <minecraft/auth/AuthProviders.h>
 #include <minecraft/auth/AccountList.h>
 #include "icons/IconList.h"
 #include "net/HttpMetaCache.h"
@@ -60,6 +61,7 @@
 #include "tools/JProfiler.h"
 #include "tools/JVisualVM.h"
 #include "tools/MCEditTool.h"
+#include "AuthServer.h"
 
 #include <xdgicon.h>
 #include "settings/INISettingsObject.h"
@@ -903,6 +905,16 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv)
         qDebug() << "<> Instances loaded.";
     }
 
+    {
+        m_authserver.reset(new AuthServer(this));
+        qDebug() << "<> Auth server started.";
+    }
+
+    // load auth providers
+    {
+        AuthProviders::load(m_authserver);
+    }
+
     // and accounts
     {
         m_accounts.reset(new AccountList(this));
@@ -932,6 +944,7 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv)
         m_metacache->addBase("translations", QDir("translations").absolutePath());
         m_metacache->addBase("icons", QDir("cache/icons").absolutePath());
         m_metacache->addBase("meta", QDir("meta").absolutePath());
+        m_metacache->addBase("injectors", QDir("injectors").absolutePath());
         m_metacache->Load();
         qDebug() << "<> Cache initialized.";
     }
@@ -1361,6 +1374,7 @@ bool Application::launch(
         controller->setOnline(online);
         controller->setProfiler(profiler);
         controller->setQuickPlayTarget(quickPlayTarget);
+        controller->setAuthserver(m_authserver);
         controller->setAccountToUse(accountToUse);
         controller->setOfflineName(offlineName);
         if(window)

@@ -5,6 +5,8 @@
 #include <katabasis/Bits.h>
 #include <QJsonObject>
 
+#include "providers/BaseAuthProvider.h"
+
 struct Skin {
     QString id;
     QString url;
@@ -56,6 +58,8 @@ struct AccountData {
     QJsonObject saveState() const;
     bool resumeStateFromV2(QJsonObject data);
     bool resumeStateFromV3(QJsonObject data);
+
+    AuthProviderPtr provider;
 
     //! userName for Mojang accounts, gamertag for MSA
     QString accountDisplayString() const;

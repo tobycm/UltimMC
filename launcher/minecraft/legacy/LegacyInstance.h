@@ -112,7 +112,7 @@ public:
         return false;
     }
     shared_qobject_ptr<LaunchTask> createLaunchTask(
-            AuthSessionPtr account, QuickPlayTargetPtr quickPlayTarget) override
+            AuthSessionPtr account, QuickPlayTargetPtr quickPlayTarget, quint16 localAuthServerPort) override
     {
         return nullptr;
     }

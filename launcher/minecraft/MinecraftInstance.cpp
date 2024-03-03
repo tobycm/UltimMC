@@ -27,7 +27,9 @@
 #include "minecraft/launch/ClaimAccount.h"
 #include "minecraft/launch/ReconstructAssets.h"
 #include "minecraft/launch/ScanModFolders.h"
+#include "minecraft/launch/InjectAuthlib.h"
 #include "minecraft/launch/VerifyJavaInstall.h"
+#include "minecraft/auth/AccountList.h"
 
 #include "java/JavaUtils.h"
 
@@ -313,6 +315,10 @@ QStringList MinecraftInstance::extraArguments() const
 QStringList MinecraftInstance::javaArguments() const
 {
     QStringList args;
+
+    if (m_injector) {
+        args.append(m_injector->javaArg);
+    }
 
     // custom args go first. we want to override them if we have our own here.
     args.append(extraArguments());
@@ -847,7 +853,7 @@ Task::Ptr MinecraftInstance::createUpdateTask(Net::Mode mode)
     return nullptr;
 }
 
-shared_qobject_ptr<LaunchTask> MinecraftInstance::createLaunchTask(AuthSessionPtr session, QuickPlayTargetPtr quickPlayTarget)
+shared_qobject_ptr<LaunchTask> MinecraftInstance::createLaunchTask(AuthSessionPtr session, QuickPlayTargetPtr quickPlayTarget, quint16 localAuthServerPort)
 {
     // FIXME: get rid of shared_from_this ...
     auto process = LaunchTask::create(std::dynamic_pointer_cast<MinecraftInstance>(shared_from_this()));
@@ -911,11 +917,14 @@ shared_qobject_ptr<LaunchTask> MinecraftInstance::createLaunchTask(AuthSessionPt
     }
 
     // if we aren't in offline mode,.
-    if(session->status != AuthSession::PlayableOffline)
+    /*if(session->status != AuthSession::PlayableOffline)
     {
-        if(!session->demo) {
-            process->appendStep(new ClaimAccount(pptr, session));
-        }
+        process->appendStep(new ClaimAccount(pptr, session));
+    }*/
+
+    // do update only if we're in online mode
+    if (session->wants_online)
+    {
         process->appendStep(new Update(pptr, Net::Mode::Online));
     }
     else
@@ -951,6 +960,18 @@ shared_qobject_ptr<LaunchTask> MinecraftInstance::createLaunchTask(AuthSessionPt
     // verify that minimum Java requirements are met
     {
         process->appendStep(new VerifyJavaInstall(pptr));
+    }
+
+    auto accounts = APPLICATION->accounts();
+    auto m_acct = accounts->getAccountByProfileName(session->player_name);
+
+    // authlib patch
+    if (m_acct->provider()->injectorEndpoint() != "")
+    {
+        auto step = new InjectAuthlib(pptr, &m_injector);
+        step->setAuthServer(m_acct->provider()->injectorEndpoint().arg(localAuthServerPort));
+        step->setOfflineMode(!session->wants_online);
+        process->appendStep(step);
     }
 
     {

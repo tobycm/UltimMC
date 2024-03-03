@@ -16,6 +16,7 @@
 #include "LoginDialog.h"
 #include "ui_LoginDialog.h"
 
+#include "minecraft/auth/AuthProviders.h"
 #include "minecraft/auth/AccountTask.h"
 
 #include <QtWidgets/QPushButton>
@@ -25,6 +26,18 @@ LoginDialog::LoginDialog(QWidget *parent) : QDialog(parent), ui(new Ui::LoginDia
     ui->setupUi(this);
     ui->progressBar->setVisible(false);
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
+
+    for(auto provider: AuthProviders::getAll()) {
+        auto providerId = provider->id();
+        // Exclude Microsoft account from here...
+        if (providerId != "MSA") {
+            QRadioButton *button = new QRadioButton(provider->displayName());
+            m_radioButtons[providerId] = button;
+            ui->radioLayout->addWidget(button);
+        }
+    }
+    m_radioButtons["dummy"]->setChecked(true);
+    adjustSize();
 
     connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
     connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
@@ -41,14 +54,26 @@ void LoginDialog::accept()
     setUserInputsEnabled(false);
     ui->progressBar->setVisible(true);
 
-    // Setup the login task and start it
     m_account = MinecraftAccount::createFromUsername(ui->userTextBox->text());
+    for(auto providerId: m_radioButtons.keys()){
+        if(m_radioButtons[providerId]->isChecked()) {
+            m_account->setProvider(AuthProviders::lookup(providerId));
+            break;
+        }
+    }
+
+    // Setup the login task and start it
     m_loginTask = m_account->login(ui->passTextBox->text());
     connect(m_loginTask.get(), &Task::failed, this, &LoginDialog::onTaskFailed);
     connect(m_loginTask.get(), &Task::succeeded, this, &LoginDialog::onTaskSucceeded);
     connect(m_loginTask.get(), &Task::status, this, &LoginDialog::onTaskStatus);
     connect(m_loginTask.get(), &Task::progress, this, &LoginDialog::onTaskProgress);
-    m_loginTask->start();
+    if (!m_loginTask)
+    {
+        onTaskSucceeded();
+    } else {
+        m_loginTask->start();
+    }
 }
 
 void LoginDialog::setUserInputsEnabled(bool enable)

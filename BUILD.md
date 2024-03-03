@@ -15,12 +15,12 @@ MultiMC is a portable application and is not supposed to be installed into any s
 That would be anything outside your home folder. Before running `make install`, make sure
 you set the install path to something you have write access to. Never build this under
 an administrator/root level account. Don't use `sudo`. It won't work and it's not supposed to work.
-Also note that this guide is for development purposes only.  
+Also note that this guide is for development purposes only.
 **No support is given for building your own fork or special build for any reason whatsoever**.
 
 # Branding, identifying marks and API keys
 
-The logo and related assets are All Rights Reserved and may only be used in official builds of MultiMC hosted on multimc.org, and as such, are not, and will not be included in this repository. The source is only provided for the purpose of collaboration. 
+The logo and related assets are All Rights Reserved and may only be used in official builds of MultiMC hosted on multimc.org, and as such, are not, and will not be included in this repository. The source is only provided for the purpose of collaboration.
 
 API keys are necessary for Microsoft account functionality. More info in [(Not) Secrets](https://github.com/MultiMC/Launcher/tree/develop/notsecrets)
 
@@ -29,7 +29,7 @@ API keys are necessary for Microsoft account functionality. More info in [(Not) 
 Clone the source code using git and grab all the submodules:
 
 ```
-git clone https://github.com/MultiMC/Launcher.git
+git clone https://github.com/UltimMC/Launcher.git
 git submodule init
 git submodule update
 ```
@@ -57,7 +57,7 @@ mkdir ~/MultiMC && cd ~/MultiMC
 mkdir build
 mkdir install
 # clone the complete source
-git clone --recursive https://github.com/MultiMC/Launcher.git src
+git clone --recursive https://github.com/UltimMC/Launcher.git src
 # configure the project
 cd build
 cmake -DCMAKE_INSTALL_PREFIX=../install ../src
@@ -92,8 +92,6 @@ You can use IDEs like KDevelop or QtCreator to open the CMake project if you wan
     - Hit "Finish" if CMake ran successfully.
 6. Cross your fingers and press the Run button (bottom left of Qt Creator).
     - If the project builds successfully it will run and the Launcher window will pop up.
-
-**If this doesn't work for you, let us know on IRC ([Esper/#MultiMC](http://webchat.esper.net/?nick=&channels=MultiMC))!**
 
 # Windows
 
@@ -171,10 +169,9 @@ ssleay32.dll
 zlib1.dll
 ```
 
-**These build instructions worked for me (Drayshak) on a fresh Windows 8 x64 Professional install. If they don't work for you, let us know on IRC ([Esper/#MultiMC](http://webchat.esper.net/?nick=&channels=MultiMC))!**
 ### Compile from command line on Windows
 1. If you installed Qt with the web installer, there should be a shortcut called `Qt 5.4 for Desktop (MinGW 4.9 32-bit)` in the Start menu on Windows 7 and 10. Best way to find it is to search for it. Do note you cannot just use cmd.exe, you have to use the shortcut, otherwise the proper MinGW software will not be on the PATH.
-2. Once that is open, change into your user directory, and clone MultiMC by doing `git clone --recursive https://github.com/MultiMC/Launcher.git`, and change directory to the folder you cloned to.
+2. Once that is open, change into your user directory, and clone MultiMC by doing `git clone --recursive https://github.com/UltimMC/Launcher.git`, and change directory to the folder you cloned to.
 3. Make a build directory, and change directory to the directory and do `cmake -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=C:\Path\that\makes\sense\for\you`. By default, it will install to C:\Program Files (x86), which you might not want, if you want a local installation. If you want to install it to that directory, make sure to run the command window as administrator.
 3. Do `mingw32-make -jX`, where X is the number of cores your CPU has plus one.
 4. Now to wait for it to compile. This could take some time. Hopefully it compiles properly.
@@ -202,8 +199,8 @@ xcode-select --install
 Pick an installation path - this is where the final `.app` will be constructed when you run `make install`. Supply it as the `CMAKE_INSTALL_PREFIX` argument during CMake configuration.
 
 ```
-git clone --recursive https://github.com/MultiMC/Launcher.git
-cd Launcher
+git clone --recursive https://github.com/UltimMC/Launcher.git
+cd MultiMC5-Cracked
 mkdir build
 cd build
 cmake \

@@ -27,7 +27,7 @@ public:
     {
         return instanceRoot();
     };
-    shared_qobject_ptr<LaunchTask> createLaunchTask(AuthSessionPtr, QuickPlayTargetPtr) override
+    shared_qobject_ptr<LaunchTask> createLaunchTask(AuthSessionPtr, QuickPlayTargetPtr, quint16) override
     {
         return nullptr;
     }

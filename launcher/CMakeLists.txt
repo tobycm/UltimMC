@@ -8,6 +8,8 @@ include (UnitTest)
 
 set(CORE_SOURCES
     # LOGIC - Base classes and infrastructure
+    AuthServer.h
+    AuthServer.cpp
     BaseInstaller.h
     BaseInstaller.cpp
     BaseVersionList.h
@@ -202,6 +204,8 @@ set(MINECRAFT_SOURCES
     minecraft/auth/AccountList.h
     minecraft/auth/AccountTask.cpp
     minecraft/auth/AccountTask.h
+    minecraft/auth/AuthProviders.cpp
+    minecraft/auth/AuthProviders.h
     minecraft/auth/AuthRequest.cpp
     minecraft/auth/AuthRequest.h
     minecraft/auth/AuthSession.cpp
@@ -214,6 +218,12 @@ set(MINECRAFT_SOURCES
     minecraft/auth/Parsers.h
     minecraft/auth/Yggdrasil.cpp
     minecraft/auth/Yggdrasil.h
+
+    minecraft/auth/providers/BaseAuthProvider.h
+    minecraft/auth/providers/DummyAuthProvider.h
+    minecraft/auth/providers/ElybyAuthProvider.h
+    minecraft/auth/providers/MojangAuthProvider.h
+    minecraft/auth/providers/MicrosoftAuthProvider.h
 
     minecraft/auth/flows/AuthFlow.cpp
     minecraft/auth/flows/AuthFlow.h
@@ -277,6 +287,8 @@ set(MINECRAFT_SOURCES
     minecraft/launch/ReconstructAssets.h
     minecraft/launch/ScanModFolders.cpp
     minecraft/launch/ScanModFolders.h
+    minecraft/launch/InjectAuthlib.cpp
+    minecraft/launch/InjectAuthlib.h
     minecraft/launch/VerifyJavaInstall.cpp
     minecraft/launch/VerifyJavaInstall.h
 

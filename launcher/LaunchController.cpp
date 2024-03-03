@@ -127,78 +127,7 @@ void LaunchController::login() {
                 // NOTE: fallthrough is intentional
             }
             case AccountState::Online: {
-                if(!m_session->wants_online) {
-                    QString usedname;
-                    if(m_offlineName.isEmpty()) {
-                        // we ask the user for a player name
-                        bool ok = false;
-                        QString lastOfflinePlayerName = APPLICATION->settings()->get("LastOfflinePlayerName").toString();
-                        usedname = lastOfflinePlayerName.isEmpty() ? m_session->player_name : lastOfflinePlayerName;
-                        QString name = QInputDialog::getText(
-                            m_parentWidget,
-                            tr("Player name"),
-                            tr("Choose your offline mode player name."),
-                            QLineEdit::Normal,
-                            usedname,
-                            &ok
-                        );
-                        if (!ok)
-                        {
-                            tryagain = false;
-                            break;
-                        }
-                        if (name.length())
-                        {
-                            usedname = name;
-                            APPLICATION->settings()->set("LastOfflinePlayerName", usedname);
-                        }
-                    }
-                    else {
-                        usedname = m_offlineName;
-                    }
-
-                    m_session->MakeOffline(usedname);
-                    // offline flavored game from here :3
-                }
-                if(m_accountToUse->ownsMinecraft()) {
-                    if(!m_accountToUse->hasProfile()) {
-                        // Now handle setting up a profile name here...
-                        ProfileSetupDialog dialog(m_accountToUse, m_parentWidget);
-                        if (dialog.exec() == QDialog::Accepted)
-                        {
-                            tryagain = true;
-                            continue;
-                        }
-                        else
-                        {
-                            emitFailed(tr("Received undetermined session status during login."));
-                            return;
-                        }
-                    }
-                    // we own Minecraft, there is a profile, it's all ready to go!
-                    launchInstance();
-                    return;
-                }
-                else {
-                    // play demo ?
-                    QMessageBox box(m_parentWidget);
-                    box.setWindowTitle(tr("Play demo?"));
-                    box.setText(tr("This account does not own Minecraft.\nYou need to purchase the game first to play it.\n\nDo you want to play the demo?"));
-                    box.setIcon(QMessageBox::Warning);
-                    auto demoButton = box.addButton(tr("Play Demo"), QMessageBox::ButtonRole::YesRole);
-                    auto cancelButton = box.addButton(tr("Cancel"), QMessageBox::ButtonRole::NoRole);
-                    box.setDefaultButton(cancelButton);
-
-                    box.exec();
-                    if(box.clickedButton() == demoButton) {
-                        // play demo here
-                        m_session->MakeDemo();
-                        launchInstance();
-                    }
-                    else {
-                        emitFailed(tr("Launch cancelled - account does not own Minecraft."));
-                    }
-                }
+                launchInstance();
                 return;
             }
             case AccountState::Errored:
@@ -321,7 +250,7 @@ void LaunchController::launchInstance()
         return;
     }
 
-    m_launcher = m_instance->createLaunchTask(m_session, m_quickPlayTarget);
+    m_launcher = m_instance->createLaunchTask(m_session, m_quickPlayTarget, m_authserver->port());
     if (!m_launcher)
     {
         emitFailed(tr("Couldn't instantiate a launcher."));

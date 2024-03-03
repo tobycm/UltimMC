@@ -5,6 +5,7 @@
 
 #include "minecraft/launch/QuickPlayTarget.h"
 #include "minecraft/auth/MinecraftAccount.h"
+#include "AuthServer.h"
 
 class InstanceWindow;
 class LaunchController: public Task
@@ -44,6 +45,10 @@ public:
         m_quickPlayTarget = std::move(quickPlayTarget);
     }
 
+    void setAuthserver(std::shared_ptr<AuthServer> authserver) {
+        m_authserver = authserver;
+    }
+
     void setAccountToUse(MinecraftAccountPtr accountToUse) {
         m_accountToUse = std::move(accountToUse);
     }
@@ -78,4 +83,5 @@ private:
     AuthSessionPtr m_session;
     shared_qobject_ptr<LaunchTask> m_launcher;
     QuickPlayTargetPtr m_quickPlayTarget;
+    std::shared_ptr<AuthServer> m_authserver;
 };
