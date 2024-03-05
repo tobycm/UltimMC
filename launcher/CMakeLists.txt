@@ -782,6 +782,8 @@ SET(LAUNCHER_SOURCES
     ui/dialogs/LoginDialog.h
     ui/dialogs/MSALoginDialog.cpp
     ui/dialogs/MSALoginDialog.h
+    ui/dialogs/LocalLoginDialog.cpp
+    ui/dialogs/LocalLoginDialog.h
     ui/dialogs/NewComponentDialog.cpp
     ui/dialogs/NewComponentDialog.h
     ui/dialogs/NewInstanceDialog.cpp
@@ -897,6 +899,7 @@ qt5_wrap_ui(LAUNCHER_UI
     ui/dialogs/IconPickerDialog.ui
     ui/dialogs/MSALoginDialog.ui
     ui/dialogs/AboutDialog.ui
+    ui/dialogs/LocalLoginDialog.ui
     ui/dialogs/LoginDialog.ui
     ui/dialogs/EditAccountDialog.ui
     ui/dialogs/CreateShortcutDialog.ui

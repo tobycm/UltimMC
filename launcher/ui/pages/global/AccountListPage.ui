@@ -52,6 +52,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionAddLocal"/>
    <addaction name="actionAddMicrosoft"/>
    <addaction name="actionAddMojang"/>
    <addaction name="actionRefresh"/>
@@ -62,9 +63,14 @@
    <addaction name="actionUploadSkin"/>
    <addaction name="actionDeleteSkin"/>
   </widget>
+  <action name="actionAddLocal">
+   <property name="text">
+    <string>Add Local</string>
+   </property>
+  </action>
   <action name="actionAddMojang">
    <property name="text">
-    <string>Add Account</string>
+    <string>Add Premium</string>
    </property>
   </action>
   <action name="actionRemove">

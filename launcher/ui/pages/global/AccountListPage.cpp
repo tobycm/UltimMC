@@ -26,6 +26,7 @@
 #include "ui/dialogs/ProgressDialog.h"
 #include "ui/dialogs/LoginDialog.h"
 #include "ui/dialogs/MSALoginDialog.h"
+#include "ui/dialogs/LocalLoginDialog.h"
 #include "ui/dialogs/CustomMessageBox.h"
 #include "ui/dialogs/SkinUploadDialog.h"
 
@@ -45,7 +46,8 @@ AccountListPage::AccountListPage(QWidget *parent)
     ui->setupUi(this);
     ui->listView->setEmptyString(tr(
         "Welcome!\n"
-        "If you're new here, you can click the \"Add\" button to add your Mojang, local, or ElyBy account."
+        "If you're new here, you can click the \"Add Local\" button to add your local account.\n"
+        "Or click the \"Add Premium\" button to add your Ely.by or Mojang account."
     ));
     ui->listView->setEmptyMode(VersionListView::String);
     ui->listView->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -109,6 +111,22 @@ QMenu * AccountListPage::createPopupMenu()
 void AccountListPage::listChanged()
 {
     updateButtonStates();
+}
+
+void AccountListPage::on_actionAddLocal_triggered()
+{
+    MinecraftAccountPtr account = LocalLoginDialog::newAccount(
+        this,
+        tr("Please enter your desired username to add your account.")
+    );
+
+    if (account)
+    {
+        m_accounts->addAccount(account);
+        if (m_accounts->count() == 1) {
+            m_accounts->setDefaultAccount(account);
+        }
+    }
 }
 
 void AccountListPage::on_actionAddMojang_triggered()

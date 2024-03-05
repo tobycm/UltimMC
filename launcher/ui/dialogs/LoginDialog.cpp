@@ -29,14 +29,14 @@ LoginDialog::LoginDialog(QWidget *parent) : QDialog(parent), ui(new Ui::LoginDia
 
     for(auto provider: AuthProviders::getAll()) {
         auto providerId = provider->id();
-        // Exclude Microsoft account from here...
-        if (providerId != "MSA") {
+        // Exclude Microsoft and Local accounts from here...
+        if (providerId != "MSA" && providerId != "dummy") {
             QRadioButton *button = new QRadioButton(provider->displayName());
             m_radioButtons[providerId] = button;
             ui->radioLayout->addWidget(button);
         }
     }
-    m_radioButtons["dummy"]->setChecked(true);
+    m_radioButtons["elyby"]->setChecked(true);
     adjustSize();
 
     connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
