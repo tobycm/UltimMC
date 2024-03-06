@@ -44,12 +44,12 @@ jobs:
            -DLauncher_LAYOUT=lin-nodeps \
            -DLauncher_BUILD_PLATFORM=lin64 \
            -DLauncher_BUG_TRACKER_URL=https://github.com/UltimMC/Launcher/issues \
+           -DLauncher_EMBED_SECRETS=On \
            $GITHUB_WORKSPACE
 
       - name: Compile
         run: |
           cd build
-          make tcversion
           make -j$(nproc)
 
       - name: Test
@@ -167,6 +167,7 @@ jobs:
            -DLauncher_LAYOUT=win-bundle ^
            -DLauncher_BUILD_PLATFORM=win32 ^
            -DLauncher_BUG_TRACKER_URL=https://github.com/UltimMC/Launcher/issues ^
+           -DLauncher_EMBED_SECRETS=On ^
            -G "MinGW Makefiles" ^
            ..
 
@@ -180,7 +181,6 @@ jobs:
           set PATH=%PATHCM%;%PATH%
           set PATH=C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;%PATH%
           cd build
-          mingw32-make tcversion
           mingw32-make -j%NUMBER_OF_PROCESSORS%
 
       - name: Test
@@ -245,26 +245,26 @@ jobs:
           mkdir build
           cd build
           cmake \
-          -DCMAKE_C_COMPILER=/usr/bin/clang \
-          -DCMAKE_CXX_COMPILER=/usr/bin/clang++ \
-          -DCMAKE_BUILD_TYPE=Release \
-          -DLauncher_NOTIFICATION_URL:STRING=https://files.multimc.org/notifications.json \
-          -DCMAKE_INSTALL_PREFIX:PATH="/Users/runner/work/UltimMC/build/dist" \
-          -DCMAKE_PREFIX_PATH="$(brew --prefix qt@5);$(brew --prefix qt@5)/lib/cmake/Qt5Core;$(brew --prefix qt@5)/lib/cmake/Qt5Widgets;$(brew --prefix qt@5)/lib/cmake/Qt5Concurrent;$(brew --prefix qt@5)/lib/cmake/Qt5Network;$(brew --prefix qt@5)/lib/cmake/Qt5Test;$(brew --prefix qt@5)/lib/cmake/Qt5Xml" \
-          -DQt5_DIR="$(brew --prefix qt@5)" \
-          -DLauncher_UPDATER_BASE=https://files.multimc.org/update/ \
-          -DLauncher_PASTE_EE_API_KEY:STRING=utLvciUouSURFzfjPxLBf5W4ISsUX4pwBDF7N1AfZ \
-          -DLauncher_ANALYTICS_ID:STRING=UA-87731965-2 \
-          -DLauncher_LAYOUT=mac-bundle \
-          -DLauncher_BUILD_PLATFORM=osx64-5.15.2 \
-          -DLauncher_BUG_TRACKER_URL=https://github.com/UltimMC/Launcher/issues \
-          -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13 \
-          $GITHUB_WORKSPACE
+           -DCMAKE_C_COMPILER=/usr/bin/clang \
+           -DCMAKE_CXX_COMPILER=/usr/bin/clang++ \
+           -DCMAKE_BUILD_TYPE=Release \
+           -DLauncher_NOTIFICATION_URL:STRING=https://files.multimc.org/notifications.json \
+           -DCMAKE_INSTALL_PREFIX:PATH="/Users/runner/work/UltimMC/build/dist" \
+           -DCMAKE_PREFIX_PATH="$(brew --prefix qt@5);$(brew --prefix qt@5)/lib/cmake/Qt5Core;$(brew --prefix qt@5)/lib/cmake/Qt5Widgets;$(brew --prefix qt@5)/lib/cmake/Qt5Concurrent;$(brew --prefix qt@5)/lib/cmake/Qt5Network;$(brew --prefix qt@5)/lib/cmake/Qt5Test;$(brew --prefix qt@5)/lib/cmake/Qt5Xml" \
+           -DQt5_DIR="$(brew --prefix qt@5)" \
+           -DLauncher_UPDATER_BASE=https://files.multimc.org/update/ \
+           -DLauncher_PASTE_EE_API_KEY:STRING=utLvciUouSURFzfjPxLBf5W4ISsUX4pwBDF7N1AfZ \
+           -DLauncher_ANALYTICS_ID:STRING=UA-87731965-2 \
+           -DLauncher_LAYOUT=mac-bundle \
+           -DLauncher_BUILD_PLATFORM=osx64-5.15.2 \
+           -DLauncher_BUG_TRACKER_URL=https://github.com/UltimMC/Launcher/issues \
+           -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13 \
+           -DLauncher_EMBED_SECRETS=On \
+           $GITHUB_WORKSPACE
 
       - name: Compile
         run: |
           cd build
-          make tcversion
           make -j$(sysctl -n hw.logicalcpu)
 
       - name: Test
