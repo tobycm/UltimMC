@@ -65,7 +65,7 @@ void processRequest(Request *request, Response *response)
     qDebug() << "Processing request";
     if (request->url == "/")
     {
-        response->body = "{\"Status\":\"OK\",\"Runtime-Mode\":\"productionMode\",\"Application-Author\":\"Mojang Web Force\",\"Application-Description\":\"Mojang Public API.\",\"Specification-Version\":\"3.58.0\",\"Application-Name\":\"yggdrasil.accounts.restlet.server.public\",\"Implementation-Version\":\"3.58.0_build194\",\"Application-Owner\":\"Mojang\"}";
+        response->body = "{\"Status\":\"OK\",\"Runtime-Mode\":\"productionMode\",\"Application-Author\":\"Mojang Web Force\",\"Application-Description\":\"Mojang Public API.\",\"Specification-Version\":\"6.0.0\",\"Application-Name\":\"yggdrasil.accounts.restlet.server.public\",\"Implementation-Version\":\"6.0.0\",\"Application-Owner\":\"Mojang\"}";
         response->statusCode = 200;
         response->headers["Content-Type"] = "application/json; charset=utf-8";
         return;

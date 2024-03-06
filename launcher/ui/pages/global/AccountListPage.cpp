@@ -223,8 +223,15 @@ void AccountListPage::updateButtonStates()
     }
     ui->actionRemove->setEnabled(accountIsReady);
     ui->actionSetDefault->setEnabled(accountIsReady);
-    ui->actionUploadSkin->setEnabled(accountIsReady);
-    ui->actionDeleteSkin->setEnabled(accountIsReady);
+    // Don't enable skin change buttons for dummy and ely.by accounts, they don't work.
+    if (hasSelection) {
+        QModelIndex selected = selection.first();
+        MinecraftAccountPtr account = selected.data(AccountList::PointerRole).value<MinecraftAccountPtr>();
+        if (account->provider()->id() != "dummy" && account->provider()->id() != "elyby") {
+            ui->actionUploadSkin->setEnabled(accountIsReady);
+            ui->actionDeleteSkin->setEnabled(accountIsReady);
+        }
+    }
     ui->actionRefresh->setEnabled(accountIsReady);
 
     if(m_accounts->defaultAccount().get() == nullptr) {
