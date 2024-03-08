@@ -59,9 +59,7 @@ ProfileSetupDialog::~ProfileSetupDialog()
 
 void ProfileSetupDialog::on_buttonBox_accepted()
 {
-    //setNameStatus(NameStatus::Available);
-    accept();
-    //setupProfile(currentCheck);
+    setupProfile(currentCheck);
 }
 
 void ProfileSetupDialog::on_buttonBox_rejected()
@@ -173,8 +171,7 @@ void ProfileSetupDialog::checkFinished(
         }
     }
     else {
-        setNameStatus(NameStatus::Available);
-        //setNameStatus(NameStatus::Error, tr("Failed to check name availability."));
+        setNameStatus(NameStatus::Error, tr("Failed to check name availability."));
     }
     isChecking = false;
 }
@@ -241,7 +238,7 @@ void ProfileSetupDialog::setupProfileFinished(
     requestor->deleteLater();
 
     isWorking = false;
-    if(error != QNetworkReply::NoError) {
+    if(error == QNetworkReply::NoError) {
         /*
          * data contains the profile in the response
          * ... we could parse it and update the account, but let's just return back to the normal login flow instead...

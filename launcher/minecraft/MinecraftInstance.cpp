@@ -316,10 +316,6 @@ QStringList MinecraftInstance::javaArguments() const
 {
     QStringList args;
 
-    if (m_injector) {
-        args.append(m_injector->javaArg);
-    }
-
     // custom args go first. we want to override them if we have our own here.
     args.append(extraArguments());
 
@@ -369,6 +365,11 @@ QStringList MinecraftInstance::javaArguments() const
     }
 
     args << "-Duser.language=en";
+
+    if (m_injector) {
+        args << m_injector->javaArg;
+        args << "-Dauthlibinjector.noShowServerName";
+    }
 
     return args;
 }
@@ -916,15 +917,11 @@ shared_qobject_ptr<LaunchTask> MinecraftInstance::createLaunchTask(AuthSessionPt
         process->appendStep(step);
     }
 
-    // if we aren't in offline mode,.
-    /*if(session->status != AuthSession::PlayableOffline)
+    if(session->status != AuthSession::PlayableOffline)
     {
-        process->appendStep(new ClaimAccount(pptr, session));
-    }*/
-
-    // do update only if we're in online mode
-    if (session->wants_online)
-    {
+        if(!session->demo) {
+            process->appendStep(new ClaimAccount(pptr, session));
+        }
         process->appendStep(new Update(pptr, Net::Mode::Online));
     }
     else

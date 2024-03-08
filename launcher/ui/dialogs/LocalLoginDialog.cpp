@@ -27,12 +27,11 @@ void LocalLoginDialog::accept()
     setUserInputsEnabled(false);
     ui->progressBar->setVisible(true);
 
-    m_account = MinecraftAccount::createFromUsername(ui->userTextBox->text());
-    m_account->setProvider(AuthProviders::lookup("dummy"));
+    m_account = MinecraftAccount::createLocal(ui->userTextBox->text());
+    m_account->setProvider(AuthProviders::lookup("local"));
 
     // Setup the login task and start it
-    const char *dummy_password = " ";
-    m_loginTask = m_account->login(QString::fromLatin1(dummy_password));
+    m_loginTask = m_account->loginLocal();
     connect(m_loginTask.get(), &Task::failed, this, &LocalLoginDialog::onTaskFailed);
     connect(m_loginTask.get(), &Task::succeeded, this, &LocalLoginDialog::onTaskSucceeded);
     connect(m_loginTask.get(), &Task::status, this, &LocalLoginDialog::onTaskStatus);

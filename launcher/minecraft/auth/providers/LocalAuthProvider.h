@@ -9,14 +9,14 @@
 
 #include "BaseAuthProvider.h"
 
-class DummyAuthProvider : public BaseAuthProvider
+class LocalAuthProvider : public BaseAuthProvider
 {
     Q_OBJECT
 
 public:
     QString id()
     {
-        return "dummy";
+        return "local";
     }
 
     QString displayName()
@@ -24,7 +24,7 @@ public:
         return "Local";
     }
 
-    bool dummyAuth()
+    bool localAuth()
     {
         return true;
     }

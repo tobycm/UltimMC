@@ -31,10 +31,12 @@
 #include "AuthProviders.h"
 #include "flows/MSA.h"
 #include "flows/Mojang.h"
+#include "flows/Local.h"
 
 MinecraftAccount::MinecraftAccount(QObject* parent) : QObject(parent) {
     data.internalId = QUuid::createUuid().toString().remove(QRegExp("[{}-]"));
 }
+
 
 MinecraftAccountPtr MinecraftAccount::loadFromJsonV2(const QJsonObject& json) {
     MinecraftAccountPtr account(new MinecraftAccount());
@@ -58,7 +60,62 @@ MinecraftAccountPtr MinecraftAccount::createFromUsername(const QString &username
     account->data.type = AccountType::Mojang;
     account->data.yggdrasilToken.extra["userName"] = username;
     account->data.yggdrasilToken.extra["clientToken"] = QUuid::createUuid().toString().remove(QRegExp("[{}-]"));
+    return account;
+}
+
+// Taken from Prism Launcher, just for compatibility with their UUIDs
+static QUuid uuidFromUsername(QString username)
+{
+    auto input = QString("OfflinePlayer:%1").arg(username).toUtf8();
+
+    // basically a reimplementation of Java's UUID#nameUUIDFromBytes
+    QByteArray digest = QCryptographicHash::hash(input, QCryptographicHash::Md5);
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    auto bOr = [](QByteArray& array, int index, char value) { array[index] = array.at(index) | value; };
+    auto bAnd = [](QByteArray& array, int index, char value) { array[index] = array.at(index) & value; };
+#else
+    auto bOr = [](QByteArray& array, qsizetype index, char value) { array[index] |= value; };
+    auto bAnd = [](QByteArray& array, qsizetype index, char value) { array[index] &= value; };
+#endif
+    bAnd(digest, 6, (char)0x0f);  // clear version
+    bOr(digest, 6, (char)0x30);   // set to version 3
+    bAnd(digest, 8, (char)0x3f);  // clear variant
+    bOr(digest, 8, (char)0x80);   // set to IETF variant
+
+    return QUuid::fromRfc4122(digest);
+}
+
+MinecraftAccountPtr MinecraftAccount::createLocal(const QString &username)
+{
+    MinecraftAccountPtr account = new MinecraftAccount();
+    account->data.type = AccountType::Local;
+    account->data.yggdrasilToken.validity = Katabasis::Validity::Certain;
+    account->data.yggdrasilToken.issueInstant = QDateTime::currentDateTimeUtc();
+    account->data.yggdrasilToken.extra["userName"] = username;
+    account->data.yggdrasilToken.extra["clientToken"] = QUuid::createUuid().toString().remove(QRegExp("[{}-]"));
+    account->data.minecraftProfile.id = uuidFromUsername(username).toString().remove(QRegExp("[{}-]"));
     account->data.minecraftProfile.id = account->data.internalId;
+    account->data.minecraftProfile.name = username;
+    account->data.minecraftProfile.validity = Katabasis::Validity::Certain;
+    account->data.minecraftEntitlement.ownsMinecraft = true;
+    account->data.minecraftEntitlement.canPlayMinecraft = true;
+    return account;
+}
+
+MinecraftAccountPtr MinecraftAccount::createElyby(const QString &username)
+{
+    MinecraftAccountPtr account = new MinecraftAccount();
+    account->data.type = AccountType::Elyby;
+    account->data.yggdrasilToken.extra["userName"] = username;
+    account->data.yggdrasilToken.extra["clientToken"] = QUuid::createUuid().toString().remove(QRegExp("[{}-]"));
+    account->data.minecraftProfile.id = account->data.internalId;
+    account->data.minecraftProfile.name = username;
+    account->data.minecraftProfile.validity = Katabasis::Validity::Certain;
+    account->data.validity_ = Katabasis::Validity::Certain;
+    account->data.minecraftEntitlement.ownsMinecraft = true;
+    account->data.minecraftEntitlement.canPlayMinecraft = true;
+    account->data.minecraftEntitlement.validity = Katabasis::Validity::Certain;
     return account;
 }
 
@@ -113,6 +170,16 @@ shared_qobject_ptr<AccountTask> MinecraftAccount::loginMSA() {
     return m_currentTask;
 }
 
+shared_qobject_ptr<AccountTask> MinecraftAccount::loginLocal() {
+    Q_ASSERT(m_currentTask.get() == nullptr);
+
+    m_currentTask.reset(new LocalLogin(&data));
+    connect(m_currentTask.get(), SIGNAL(succeeded()), SLOT(authSucceeded()));
+    connect(m_currentTask.get(), SIGNAL(failed(QString)), SLOT(authFailed(QString)));
+    emit activityChanged(true);
+    return m_currentTask;
+}
+
 shared_qobject_ptr<AccountTask> MinecraftAccount::refresh() {
     if(m_currentTask) {
         return m_currentTask;
@@ -121,8 +188,11 @@ shared_qobject_ptr<AccountTask> MinecraftAccount::refresh() {
     if(data.type == AccountType::MSA) {
         m_currentTask.reset(new MSASilent(&data));
     }
-    else {
+    else if (data.type == AccountType::Mojang) {
         m_currentTask.reset(new MojangRefresh(&data));
+    }
+    else if (data.type == AccountType::Local) {
+        m_currentTask.reset(new LocalRefresh(&data));
     }
 
     connect(m_currentTask.get(), SIGNAL(succeeded()), SLOT(authSucceeded()));

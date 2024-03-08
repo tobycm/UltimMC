@@ -40,7 +40,9 @@ struct MinecraftProfile {
 
 enum class AccountType {
     MSA,
-    Mojang
+    Mojang,
+    Local,
+    Elyby
 };
 
 enum class AccountState {

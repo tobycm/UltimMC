@@ -314,9 +314,18 @@ bool AccountData::resumeStateFromV3(QJsonObject data) {
     if(typeS == "MSA") {
         type = AccountType::MSA;
         provider = AuthProviders::lookup("MSA");
-    } else {
+    } else if (typeS == "Mojang"){
         type = AccountType::Mojang;
-        provider = AuthProviders::lookup(typeS);
+        provider = AuthProviders::lookup("mojang");
+    } else if (typeS == "Local") {
+        type = AccountType::Local;
+        provider = AuthProviders::lookup("local");
+    } else if (typeS == "Elyby") {
+        type = AccountType::Elyby;
+        provider = AuthProviders::lookup("elyby");
+    } else {
+        qWarning() << "Failed to parse account data: type is not recognized.";
+        return false;
     }
 
     if(type == AccountType::Mojang) {
@@ -349,7 +358,7 @@ bool AccountData::resumeStateFromV3(QJsonObject data) {
 QJsonObject AccountData::saveState() const {
     QJsonObject output;
     if(type == AccountType::Mojang) {
-        output["type"] = provider->id();
+        output["type"] = "Mojang";
         if(legacy) {
             output["legacy"] = true;
         }
@@ -366,6 +375,10 @@ QJsonObject AccountData::saveState() const {
         tokenToJSONV3(output, userToken, "utoken");
         tokenToJSONV3(output, xboxApiToken, "xrp-main");
         tokenToJSONV3(output, mojangservicesToken, "xrp-mc");
+    } else if (type == AccountType::Local) {
+        output["type"] = "Local";
+    } else if (type == AccountType::Elyby) {
+        output["type"] = "Elyby";
     }
 
     tokenToJSONV3(output, yggdrasilToken, "ygg");
@@ -419,8 +432,7 @@ QString AccountData::profileId() const {
 
 QString AccountData::profileName() const {
     if(minecraftProfile.name.size() == 0) {
-        // Fix for too long of a name
-        return QObject::tr("%1").arg(accountDisplayString());
+        return QObject::tr("No profile (%1)").arg(accountDisplayString());
     }
     else {
         return minecraftProfile.name;
@@ -429,7 +441,8 @@ QString AccountData::profileName() const {
 
 QString AccountData::accountDisplayString() const {
     switch(type) {
-        case AccountType::Mojang: {
+        case AccountType::Mojang:
+        case AccountType::Elyby: {
             return userName();
         }
         case AccountType::MSA: {
@@ -437,6 +450,9 @@ QString AccountData::accountDisplayString() const {
                 return xboxApiToken.extra["gtg"].toString();
             }
             return "Xbox profile missing";
+        }
+        case AccountType::Local: {
+            return "<Local>";
         }
         default: {
             return "Invalid Account";

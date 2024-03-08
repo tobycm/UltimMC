@@ -220,7 +220,7 @@ set(MINECRAFT_SOURCES
     minecraft/auth/Yggdrasil.h
 
     minecraft/auth/providers/BaseAuthProvider.h
-    minecraft/auth/providers/DummyAuthProvider.h
+    minecraft/auth/providers/LocalAuthProvider.h
     minecraft/auth/providers/ElybyAuthProvider.h
     minecraft/auth/providers/MojangAuthProvider.h
     minecraft/auth/providers/MicrosoftAuthProvider.h
@@ -231,6 +231,8 @@ set(MINECRAFT_SOURCES
     minecraft/auth/flows/Mojang.h
     minecraft/auth/flows/MSA.cpp
     minecraft/auth/flows/MSA.h
+    minecraft/auth/flows/Local.cpp
+    minecraft/auth/flows/Local.h
 
     minecraft/auth/steps/EntitlementsStep.cpp
     minecraft/auth/steps/EntitlementsStep.h
@@ -246,6 +248,8 @@ set(MINECRAFT_SOURCES
     minecraft/auth/steps/MinecraftProfileStep.h
     minecraft/auth/steps/MSAStep.cpp
     minecraft/auth/steps/MSAStep.h
+    minecraft/auth/steps/LocalStep.cpp
+    minecraft/auth/steps/LocalStep.h
     minecraft/auth/steps/XboxAuthorizationStep.cpp
     minecraft/auth/steps/XboxAuthorizationStep.h
     minecraft/auth/steps/XboxProfileStep.cpp

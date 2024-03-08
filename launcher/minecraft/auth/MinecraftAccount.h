@@ -74,6 +74,10 @@ public: /* construction */
 
     static MinecraftAccountPtr createFromUsername(const QString &username);
 
+    static MinecraftAccountPtr createLocal(const QString &username);
+
+    static MinecraftAccountPtr createElyby(const QString &username);
+
     static MinecraftAccountPtr createBlankMSA();
 
     static MinecraftAccountPtr loadFromJsonV2(const QJsonObject &json);
@@ -91,6 +95,8 @@ public: /* manipulation */
     shared_qobject_ptr<AccountTask> login(QString password);
 
     shared_qobject_ptr<AccountTask> loginMSA();
+
+    shared_qobject_ptr<AccountTask> loginLocal();
 
     shared_qobject_ptr<AccountTask> refresh();
 
@@ -159,6 +165,14 @@ public: /* queries */
             break;
             case AccountType::MSA: {
                 return "msa";
+            }
+            break;
+            case AccountType::Local: {
+                return "local";
+            }
+            break;
+            case AccountType::Elyby: {
+                return "elyby";
             }
             break;
             default: {

@@ -30,7 +30,7 @@ LoginDialog::LoginDialog(QWidget *parent) : QDialog(parent), ui(new Ui::LoginDia
     for(auto provider: AuthProviders::getAll()) {
         auto providerId = provider->id();
         // Exclude Microsoft and Local accounts from here...
-        if (providerId != "MSA" && providerId != "dummy") {
+        if (providerId != "MSA" && providerId != "local") {
             QRadioButton *button = new QRadioButton(provider->displayName());
             m_radioButtons[providerId] = button;
             ui->radioLayout->addWidget(button);
