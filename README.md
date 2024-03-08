@@ -44,8 +44,6 @@ And an AUR package as [ultimmc-bin](https://aur.archlinux.org/packages/ultimmc-b
 8. Save it.
 9. Now enjoy the Launcher.
 
-To remove "localhost:nnnn" or "Ely.by" from the Minecraft main menu and F3, add `-Dauthlibinjector.noShowServerName` to the Java arguments in the UltimMC settings.
-
 ## Updating
 
 To update the launcher replace all replaceable files and folders with the newer ones from any of the links listed above.
