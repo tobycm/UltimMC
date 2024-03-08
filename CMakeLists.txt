@@ -111,6 +111,17 @@ set(Launcher_SUBREDDIT_URL "" CACHE STRING "URL for the subreddit.")
 # Use the secrets library or a public stub?
 option(Launcher_EMBED_SECRETS "Determines whether to embed secrets. Secrets are separate and non-public." OFF)
 
+# API Keys
+# NOTE: These API keys are here for convenience. If you rebrand this software or intend to break the terms of service
+# of these platforms, please change these API keys beforehand.
+# Be aware that if you were to use these API keys for malicious purposes they might get revoked, which might cause
+# breakage to thousands of users.
+# If you don't plan to use these features of this software, you can just remove these values.
+
+# By using this key in your builds you accept the terms of use laid down in
+# https://docs.microsoft.com/en-us/legal/microsoft-identity-platform/terms-of-use
+set(Launcher_MSA_CLIENT_ID "f4404707-7bbe-4e40-80ba-85fb2bb825a1" CACHE STRING "Client ID you can get from Microsoft Identity Platform when you register an application")
+
 #### Check the current Git commit and branch
 include(GetGitRevisionDescription)
 get_git_head_revision(Launcher_GIT_REFSPEC Launcher_GIT_COMMIT)

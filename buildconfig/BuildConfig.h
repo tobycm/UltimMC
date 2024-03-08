@@ -81,6 +81,11 @@ public:
     QString IMGUR_CLIENT_ID;
 
     /**
+     * Client ID you can get from Microsoft Identity Platform when you register an application
+     */
+    QString MSA_CLIENT_ID;
+
+    /**
      * Metadata repository URL prefix
      */
     QString META_URL;
