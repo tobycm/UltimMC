@@ -233,6 +233,8 @@ set(MINECRAFT_SOURCES
     minecraft/auth/flows/MSA.h
     minecraft/auth/flows/Local.cpp
     minecraft/auth/flows/Local.h
+    minecraft/auth/flows/Elyby.cpp
+    minecraft/auth/flows/Elyby.h
 
     minecraft/auth/steps/EntitlementsStep.cpp
     minecraft/auth/steps/EntitlementsStep.h

@@ -98,6 +98,8 @@ public: /* manipulation */
 
     shared_qobject_ptr<AccountTask> loginLocal();
 
+    shared_qobject_ptr<AccountTask> loginElyby(QString password);
+
     shared_qobject_ptr<AccountTask> refresh();
 
     shared_qobject_ptr<AccountTask> currentTask();

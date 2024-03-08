@@ -32,6 +32,7 @@
 #include "flows/MSA.h"
 #include "flows/Mojang.h"
 #include "flows/Local.h"
+#include "flows/Elyby.h"
 
 MinecraftAccount::MinecraftAccount(QObject* parent) : QObject(parent) {
     data.internalId = QUuid::createUuid().toString().remove(QRegExp("[{}-]"));
@@ -95,7 +96,6 @@ MinecraftAccountPtr MinecraftAccount::createLocal(const QString &username)
     account->data.yggdrasilToken.extra["userName"] = username;
     account->data.yggdrasilToken.extra["clientToken"] = QUuid::createUuid().toString().remove(QRegExp("[{}-]"));
     account->data.minecraftProfile.id = uuidFromUsername(username).toString().remove(QRegExp("[{}-]"));
-    account->data.minecraftProfile.id = account->data.internalId;
     account->data.minecraftProfile.name = username;
     account->data.minecraftProfile.validity = Katabasis::Validity::Certain;
     account->data.minecraftEntitlement.ownsMinecraft = true;
@@ -109,13 +109,11 @@ MinecraftAccountPtr MinecraftAccount::createElyby(const QString &username)
     account->data.type = AccountType::Elyby;
     account->data.yggdrasilToken.extra["userName"] = username;
     account->data.yggdrasilToken.extra["clientToken"] = QUuid::createUuid().toString().remove(QRegExp("[{}-]"));
-    account->data.minecraftProfile.id = account->data.internalId;
+    account->data.minecraftProfile.id = uuidFromUsername(username).toString().remove(QRegExp("[{}-]"));
     account->data.minecraftProfile.name = username;
     account->data.minecraftProfile.validity = Katabasis::Validity::Certain;
-    account->data.validity_ = Katabasis::Validity::Certain;
     account->data.minecraftEntitlement.ownsMinecraft = true;
     account->data.minecraftEntitlement.canPlayMinecraft = true;
-    account->data.minecraftEntitlement.validity = Katabasis::Validity::Certain;
     return account;
 }
 
@@ -180,6 +178,16 @@ shared_qobject_ptr<AccountTask> MinecraftAccount::loginLocal() {
     return m_currentTask;
 }
 
+shared_qobject_ptr<AccountTask> MinecraftAccount::loginElyby(QString password) {
+    Q_ASSERT(m_currentTask.get() == nullptr);
+
+    m_currentTask.reset(new ElybyLogin(&data, password));
+    connect(m_currentTask.get(), SIGNAL(succeeded()), SLOT(authSucceeded()));
+    connect(m_currentTask.get(), SIGNAL(failed(QString)), SLOT(authFailed(QString)));
+    emit activityChanged(true);
+    return m_currentTask;
+}
+
 shared_qobject_ptr<AccountTask> MinecraftAccount::refresh() {
     if(m_currentTask) {
         return m_currentTask;
@@ -193,6 +201,9 @@ shared_qobject_ptr<AccountTask> MinecraftAccount::refresh() {
     }
     else if (data.type == AccountType::Local) {
         m_currentTask.reset(new LocalRefresh(&data));
+    }
+    else if (data.type == AccountType::Elyby) {
+        m_currentTask.reset(new ElybyRefresh(&data));
     }
 
     connect(m_currentTask.get(), SIGNAL(succeeded()), SLOT(authSucceeded()));

@@ -16,7 +16,6 @@
 #pragma once
 
 #include <QtWidgets/QDialog>
-#include <QtWidgets/QRadioButton>
 #include <QtCore/QEventLoop>
 
 #include "minecraft/auth/MinecraftAccount.h"
@@ -56,6 +55,5 @@ slots:
 private:
     Ui::LoginDialog *ui;
     MinecraftAccountPtr m_account;
-    QMap<QString, QRadioButton*> m_radioButtons;
     Task::Ptr m_loginTask;
 };

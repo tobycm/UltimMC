@@ -27,18 +27,6 @@ LoginDialog::LoginDialog(QWidget *parent) : QDialog(parent), ui(new Ui::LoginDia
     ui->progressBar->setVisible(false);
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 
-    for(auto provider: AuthProviders::getAll()) {
-        auto providerId = provider->id();
-        // Exclude Microsoft and Local accounts from here...
-        if (providerId != "MSA" && providerId != "local") {
-            QRadioButton *button = new QRadioButton(provider->displayName());
-            m_radioButtons[providerId] = button;
-            ui->radioLayout->addWidget(button);
-        }
-    }
-    m_radioButtons["elyby"]->setChecked(true);
-    adjustSize();
-
     connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
     connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 }
@@ -54,16 +42,11 @@ void LoginDialog::accept()
     setUserInputsEnabled(false);
     ui->progressBar->setVisible(true);
 
-    m_account = MinecraftAccount::createFromUsername(ui->userTextBox->text());
-    for(auto providerId: m_radioButtons.keys()){
-        if(m_radioButtons[providerId]->isChecked()) {
-            m_account->setProvider(AuthProviders::lookup(providerId));
-            break;
-        }
-    }
+    m_account = MinecraftAccount::createElyby(ui->userTextBox->text());
+    m_account->setProvider(AuthProviders::lookup("elyby"));
 
     // Setup the login task and start it
-    m_loginTask = m_account->login(ui->passTextBox->text());
+    m_loginTask = m_account->loginElyby(ui->passTextBox->text());
     connect(m_loginTask.get(), &Task::failed, this, &LoginDialog::onTaskFailed);
     connect(m_loginTask.get(), &Task::succeeded, this, &LoginDialog::onTaskSucceeded);
     connect(m_loginTask.get(), &Task::status, this, &LoginDialog::onTaskStatus);

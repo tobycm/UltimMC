@@ -47,7 +47,7 @@ AccountListPage::AccountListPage(QWidget *parent)
     ui->listView->setEmptyString(tr(
         "Welcome!\n"
         "If you're new here, you can click the \"Add Local\" button to add your local account.\n"
-        "Or click the \"Add Premium\" button to add your Ely.by or Mojang account."
+        "Or click the \"Add Ely.by\" button to add your Ely.by account."
     ));
     ui->listView->setEmptyMode(VersionListView::String);
     ui->listView->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -161,7 +161,7 @@ void AccountListPage::on_actionAddMicrosoft_triggered()
     }
     MinecraftAccountPtr account = MSALoginDialog::newAccount(
         this,
-        tr("Please enter your account email and password to add your account.")
+        tr("Please enter your Mojang account email and password to add your account.")
     );
 
     if (account)
@@ -227,7 +227,7 @@ void AccountListPage::updateButtonStates()
     ui->actionSetDefault->setEnabled(accountIsReady);
     ui->actionUploadSkin->setEnabled(accountIsReady && accountIsOnline);
     ui->actionDeleteSkin->setEnabled(accountIsReady && accountIsOnline);
-    ui->actionRefresh->setEnabled(accountIsReady && accountIsOnline);
+    ui->actionRefresh->setEnabled(accountIsReady);
 
     if(m_accounts->defaultAccount().get() == nullptr) {
         ui->actionNoDefault->setEnabled(false);

@@ -61,9 +61,6 @@
     </widget>
    </item>
    <item>
-    <layout class="QVBoxLayout" name="radioLayout"/>
-   </item>
-   <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>

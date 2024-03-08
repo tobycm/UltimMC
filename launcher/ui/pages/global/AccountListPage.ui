@@ -53,8 +53,8 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionAddLocal"/>
-   <addaction name="actionAddMicrosoft"/>
    <addaction name="actionAddMojang"/>
+   <addaction name="actionAddMicrosoft"/>
    <addaction name="actionRefresh"/>
    <addaction name="actionRemove"/>
    <addaction name="actionSetDefault"/>
@@ -70,7 +70,7 @@
   </action>
   <action name="actionAddMojang">
    <property name="text">
-    <string>Add Premium</string>
+    <string>Add Ely.by</string>
    </property>
   </action>
   <action name="actionRemove">

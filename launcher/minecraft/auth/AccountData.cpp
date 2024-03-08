@@ -388,7 +388,7 @@ QJsonObject AccountData::saveState() const {
 }
 
 QString AccountData::userName() const {
-    if(type != AccountType::Mojang) {
+    if(type != AccountType::Mojang && type != AccountType::Elyby) {
         return QString();
     }
     return yggdrasilToken.extra["userName"].toString();
@@ -399,14 +399,14 @@ QString AccountData::accessToken() const {
 }
 
 QString AccountData::clientToken() const {
-    if(type != AccountType::Mojang) {
+    if(type != AccountType::Mojang && type != AccountType::Elyby) {
         return QString();
     }
     return yggdrasilToken.extra["clientToken"].toString();
 }
 
 void AccountData::setClientToken(QString clientToken) {
-    if(type != AccountType::Mojang) {
+    if(type != AccountType::Mojang && type != AccountType::Elyby) {
         return;
     }
     yggdrasilToken.extra["clientToken"] = clientToken;
@@ -420,7 +420,7 @@ void AccountData::generateClientTokenIfMissing() {
 }
 
 void AccountData::invalidateClientToken() {
-    if(type != AccountType::Mojang) {
+    if(type != AccountType::Mojang && type != AccountType::Elyby) {
         return;
     }
     yggdrasilToken.extra["clientToken"] = QUuid::createUuid().toString().remove(QRegExp("[{-}]"));
