@@ -40,7 +40,7 @@ And an AUR package as [ultimmc-bin](https://aur.archlinux.org/packages/ultimmc-b
 3. Launch `UltimMC`.
 4. Go to account settings.
 6. A. Pick "Add Local" and you will be requested to use the username you desire, this can be anything.
-7. B. Pick "Add Premium" and add your Ely.by account by putting your email and password.
+7. B. Pick "Add Ely.by" and add your Ely.by account by putting your email and password.
 8. Save it.
 9. Now enjoy the Launcher.
 
@@ -49,3 +49,13 @@ And an AUR package as [ultimmc-bin](https://aur.archlinux.org/packages/ultimmc-b
 To update the launcher replace all replaceable files and folders with the newer ones from any of the links listed above.
 
 A better update system is in the works.
+
+## Forking
+
+This project now includes our MSA API key in order to have functional Microsoft authentication within the launcher.
+
+This means you're accepting the:
+
+- [Microsoft Identity Platform Terms of Use](https://learn.microsoft.com/en-us/legal/microsoft-identity-platform/terms-of-use)
+
+We humbly ask that in case you wish to fork UltimMC, please either remove the key by setting it empty (`""`) or by setting your own.
