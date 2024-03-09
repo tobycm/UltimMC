@@ -250,7 +250,7 @@ jobs:
            -DCMAKE_BUILD_TYPE=Release \
            -DLauncher_NOTIFICATION_URL:STRING=https://files.multimc.org/notifications.json \
            -DCMAKE_INSTALL_PREFIX:PATH="/Users/runner/work/UltimMC/build/dist" \
-           -DCMAKE_PREFIX_PATH="$(brew --prefix qt@5);$(brew --prefix qt@5)/lib/cmake/Qt5Core;$(brew --prefix qt@5)/lib/cmake/Qt5Widgets;$(brew --prefix qt@5)/lib/cmake/Qt5Concurrent;$(brew --prefix qt@5)/lib/cmake/Qt5Network;$(brew --prefix qt@5)/lib/cmake/Qt5Test;$(brew --prefix qt@5)/lib/cmake/Qt5Xml" \
+           -DCMAKE_PREFIX_PATH="$(brew --prefix qt@5)/lib/cmake" \
            -DQt5_DIR="$(brew --prefix qt@5)" \
            -DLauncher_UPDATER_BASE=https://files.multimc.org/update/ \
            -DLauncher_PASTE_EE_API_KEY:STRING=utLvciUouSURFzfjPxLBf5W4ISsUX4pwBDF7N1AfZ \
@@ -275,6 +275,7 @@ jobs:
 
       - name: Install
         run: |
+          brew remove --ignore-dependencies -f glib zstd pcre2 glib gettext jpeg-turbo freetype libpng
           cd build
           make install
           chmod +x /Users/runner/work/UltimMC/build/dist/UltimMC.app/Contents/MacOS/UltimMC
