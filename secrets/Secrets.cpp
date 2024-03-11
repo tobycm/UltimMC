@@ -1,5 +1,4 @@
 #include "Secrets.h"
-#include "../buildconfig/BuildConfig.h"
 
 #include <array>
 #include <cstdio>
@@ -29,7 +28,7 @@ namespace {
  * If you intend to base your own launcher on this code, take care and customize this to obfuscate the client ID, so it cannot be trivially found by casual attackers.
  */
 
-QString MSAClientID = BuildConfig.MSA_CLIENT_ID;
+QString MSAClientID = "f4404707-7bbe-4e40-80ba-85fb2bb825a1";
 }
 
 namespace Secrets {
