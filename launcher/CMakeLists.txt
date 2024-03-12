@@ -248,6 +248,8 @@ set(MINECRAFT_SOURCES
     minecraft/auth/steps/MigrationEligibilityStep.h
     minecraft/auth/steps/MinecraftProfileStep.cpp
     minecraft/auth/steps/MinecraftProfileStep.h
+    minecraft/auth/steps/ElybyProfileStep.cpp
+    minecraft/auth/steps/ElybyProfileStep.h
     minecraft/auth/steps/MSAStep.cpp
     minecraft/auth/steps/MSAStep.h
     minecraft/auth/steps/LocalStep.cpp
