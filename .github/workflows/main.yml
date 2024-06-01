@@ -222,7 +222,7 @@ jobs:
 
   build-mac:
     name: build-mac
-    runs-on: macos-latest
+    runs-on: macos-13
 
     steps:
       - uses: actions/checkout@main
@@ -244,7 +244,6 @@ jobs:
         run: |
           mkdir build
           cd build
-          export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
           cmake \
            -DCMAKE_C_COMPILER=/usr/bin/clang \
            -DCMAKE_CXX_COMPILER=/usr/bin/clang++ \
@@ -266,20 +265,17 @@ jobs:
       - name: Compile
         run: |
           cd build
-          export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
           make -j$(sysctl -n hw.logicalcpu)
 
       - name: Test
         run: |
           cd build
-          export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
           make test
           cmake -E remove_directory "/Users/runner/work/UltimMC/build/dist"
 
       - name: Install
         run: |
           cd build
-          export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
           make install
           chmod +x /Users/runner/work/UltimMC/build/dist/UltimMC.app/Contents/MacOS/UltimMC
 
