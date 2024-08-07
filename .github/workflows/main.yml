@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ develop ]
+    branches: [develop]
   pull_request:
-    branches: [ develop ]
+    branches: [develop]
   workflow_dispatch:
   schedule:
     - cron: "0 0 1 * *"
@@ -17,21 +17,23 @@ jobs:
     steps:
       - uses: actions/checkout@main
         with:
-          submodules: 'recursive'
+          submodules: "recursive"
 
       - name: Install Dependencies
         run: |
           sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
-          sudo add-apt-repository 'deb http://dk.archive.ubuntu.com/ubuntu/ bionic main'
-          sudo add-apt-repository 'deb http://dk.archive.ubuntu.com/ubuntu/ bionic universe'
-          sudo apt update
-          sudo apt install libgl1-mesa-dev qttools5-dev g++-5 gcc-5
+          echo 'deb http://dk.archive.ubuntu.com/ubuntu/ bionic main' | sudo tee /etc/apt/sources.list.d/bionic-main.list
+          echo 'deb http://dk.archive.ubuntu.com/ubuntu/ bionic universe' | sudo tee /etc/apt/sources.list.d/bionic-universe.list
+          sudo apt-get update
+          sudo apt-get install libgl1-mesa-dev qttools5-dev g++-5 gcc-5 build-essential cmake zlib1g-dev gcc-i686-linux-gnu g++-i686-linux-gnu openjdk-8-jdk -y
 
       - name: Build
         run: |
           export JAVA_HOME=$JAVA_HOME_8_X64
           mkdir build
           cd build
+          export CFLAGS="-m32"
+          export LDFLAGS="-m32"
           cmake \
            -DCMAKE_C_COMPILER=/usr/bin/gcc-5 \
            -DCMAKE_CXX_COMPILER=/usr/bin/g++-5 \
@@ -68,4 +70,3 @@ jobs:
         with:
           name: mmc-cracked-lin64
           path: /home/runner/UltimMC
-
